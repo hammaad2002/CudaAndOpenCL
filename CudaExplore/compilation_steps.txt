@@ -1,0 +1,9 @@
+1) First compile the kernel.
+'''
+nvcc -c vector_kernel.cu -o vector_kernel.o
+'''
+
+2) Then compile and link everything together.
+'''
+nvcc main.cpp vector_kernel.o -o main
+'''
