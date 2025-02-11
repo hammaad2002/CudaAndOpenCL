@@ -1,0 +1,8 @@
+Setup:
+
+1) sudo apt-get install opencl-headers # installs opencl headers
+2) sudo apt-get install ocl-icd-opencl-dev # installs opencl library
+
+Steps:
+
+1) gcc main.cpp -I/usr/local/cuda-12.3/targets/x86_64-linux/include -o vector_add -lOpenCL
