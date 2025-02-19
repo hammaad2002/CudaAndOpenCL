@@ -3,6 +3,59 @@
 #include <random>
 #include <vector>
 #include <boost/compute/algorithm/sort.hpp>
+#include <boost/compute/closure.hpp>
+
+struct Box3D
+{
+  int label;
+  float score;
+  float x;
+  float y;
+  float z;
+  float length;
+  float width;
+  float height;
+  float yaw;
+  float vel_x;
+  float vel_y;
+
+  // variance
+  float x_variance;
+  float y_variance;
+  float z_variance;
+  float length_variance;
+  float width_variance;
+  float height_variance;
+  float yaw_variance;
+  float vel_x_variance;
+  float vel_y_variance;
+};
+
+// witnessed the following so called 'AdApT StRuCt' macro in the world's best documentation given below.
+// https://www.boost.org/doc/libs/1_81_0/boost/compute/types/struct.hpp
+
+BOOST_COMPUTE_ADAPT_STRUCT(Box3D, Box3D, (
+    label,
+    score,
+    x,
+    y,
+    z,
+    length,
+    width,
+    height,
+    yaw,
+    vel_x,
+    vel_y,
+    x_variance,
+    y_variance,
+    z_variance,
+    length_variance,
+    width_variance,
+    height_variance,
+    yaw_variance,
+    vel_x_variance,
+    vel_y_variance
+));
 
 int main(){
 
@@ -48,6 +101,31 @@ int main(){
     for (auto elem: vectorContainer){
         std::cout << elem << std::endl;
     }
-    
+
+    // HARDCORE SORTING
+    // Creating useless variables because I can't come up with a better logic and its 12:51 A fucking M
+
+    Box3D varOne, varTwo, varThree;
+    varOne.score = 3.f;
+    varTwo.score = 5.f;
+    varThree.score = 1.f;
+
+    std::vector<Box3D> boxContainerLol;
+    boxContainerLol.push_back(varOne);
+    boxContainerLol.push_back(varTwo);
+    boxContainerLol.push_back(varThree);
+
+    BOOST_COMPUTE_CLOSURE(bool, score_greater, (Box3D lb, Box3D rb), (varOne),
+    {
+        return lb.score > rb.score;
+    });
+
+    // So the sorting should be varTwo, varOne, varThree 
+    boost::compute::sort(boxContainerLol.begin(), boxContainerLol.end(), score_greater, queue);
+
+    for (auto elem: boxContainerLol){
+        printf("Score: %f\n", elem.score);
+    }
+
     return 0;
 }
